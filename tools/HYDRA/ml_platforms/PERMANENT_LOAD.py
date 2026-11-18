@@ -1,6 +1,7 @@
 import sys
 import os
 from pathlib import Path
+import traceback
 
 sys.path.insert(0, str(Path(__file__).parent / "ml_platforms"))
 
@@ -28,18 +29,17 @@ PERMANENT AUTO-LOAD COMMAND FOR LM STUDIO
 Copy-paste this entire block into LM Studio Python interpreter
 """
 
-import sys
-from typing import List
-import traceback
 
 #: Swallows recorded when the failure ledger is unavailable (it is a stdlib-only
 #: leaf, so this fallback should never fire -- if it does, the ledger is missing).
 
 try:
     from CORE.failure_ledger import note_failure
-except ImportError:                               # never break the host
+except ImportError:  # never break the host
+
     def note_failure(where: str, exc: BaseException | None = None) -> None:
         pass  # ledger missing; evidence-vs-silence tradeoff capped here
+
 
 # 1. Add ML platforms to path PERMANENTLY
 ML_PATH = Path.home() / "Desktop" / "Azazael" / "ml_platforms"

@@ -1,5 +1,13 @@
 import sys
 from pathlib import Path
+import re
+import json
+import subprocess
+from datetime import datetime
+from dataclasses import dataclass, field
+from enum import Enum
+import argparse
+import time
 
 sys.path.insert(0, str(Path(__file__).parent / "ml_platforms"))
 
@@ -16,25 +24,15 @@ Usage:
     >>> HydraProtocols.fix_old_paths()
 """
 
-import sys
-import re
-import json
-import subprocess
-from pathlib import Path
-from datetime import datetime
 # from typing import Dict, List, Optional  # removed — all names have native equivalents
-from dataclasses import dataclass, field
-from enum import Enum
-from typing import List
-import argparse
-import time
 
 #: Swallows recorded when the failure ledger is unavailable (it is a stdlib-only
 #: leaf, so this fallback should never fire -- if it does, the ledger is missing).
 
 try:
     from CORE.failure_ledger import note_failure
-except ImportError:                               # never break the host
+except ImportError:  # never break the host
+
     def note_failure(where: str, exc: BaseException | None = None) -> None:
         pass  # ledger missing; evidence-vs-silence tradeoff capped here
 
@@ -74,7 +72,7 @@ class ConflictEntry:
 
     type: ConflictType
     file: str
-    line: (int | None)
+    line: int | None
     current_value: str
     expected_value: str
     severity: str  # critical, high, medium, low
@@ -95,7 +93,7 @@ class HydraProtocols:
 
     VERSION = "2.0.0"
 
-    def __init__(self, root: (str | None) = None):
+    def __init__(self, root: str | None = None):
         self.root = Path(root) if root else Path(__file__).parent.parent
         self.protocol_log: list[ProtocolResult] = []
         self.conflicts: list[ConflictEntry] = []
@@ -103,13 +101,16 @@ class HydraProtocols:
         # Dynamic paths via CORE.paths
         try:
             from CORE.paths import get_src_dir, get_desktop_dir
+
             _desktop = get_desktop_dir()
             get_src_dir()
         except ImportError as exc:
             note_failure("hydra_protocols:L96", exc)
             import sys as _sys
+
             _sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
             from CORE.paths import get_src_dir, get_desktop_dir
+
             _desktop = get_desktop_dir()
             get_src_dir()
 
@@ -129,9 +130,6 @@ class HydraProtocols:
         }
 
         self.spelling_errors = {
-            "Azazael": "Azazael",
-            "Azazael": "Azazael",
-            "Azazael": "Azazael",
             "Azazael": "Azazael",
         }
 
@@ -237,7 +235,9 @@ class HydraProtocols:
                 proc = subprocess.run(
                     [str(venv_python), "-c", f"import {pkg}; print({pkg}.__version__)"],
                     capture_output=True,
-                    text=True, encoding="utf-8", errors="replace",
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
                     timeout=30,
                 )
                 if proc.returncode == 0:
@@ -610,7 +610,7 @@ def main():
     p_run.add_argument("--venv", action="store_true", help="Sync venv")
     p_run.add_argument("--env", action="store_true", help="Sync environment")
 
-    p_status = subparsers.add_parser("status", help="Show status")
+    subparsers.add_parser("status", help="Show status")
 
     args = parser.parse_args()
 

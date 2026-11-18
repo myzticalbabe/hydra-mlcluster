@@ -1,5 +1,10 @@
 import sys
 from pathlib import Path
+import json
+import time
+from datetime import datetime
+from dataclasses import dataclass, field
+import argparse
 
 sys.path.insert(0, str(Path(__file__).parent / "ml_platforms"))
 
@@ -26,24 +31,18 @@ Usage:
     python hydra_launcher.py status
 """
 
-import sys
-import json
-import time
-from pathlib import Path
-from datetime import datetime
 # from typing import Dict, List  # removed — all names have native equivalents
-from dataclasses import dataclass, field
-import argparse
-from typing import List
 
 #: Swallows recorded when the failure ledger is unavailable (it is a stdlib-only
 #: leaf, so this fallback should never fire -- if it does, the ledger is missing).
 
 try:
     from CORE.failure_ledger import note_failure
-except ImportError:                               # never break the host
+except ImportError:  # never break the host
+
     def note_failure(where: str, exc: BaseException | None = None) -> None:
         pass  # ledger missing; evidence-vs-silence tradeoff capped here
+
 
 ROOT = Path(__file__).parent.parent
 HYDRA_ROOT = Path(__file__).parent
@@ -409,9 +408,9 @@ def main():
     p_run.add_argument("--conflicts", action="store_true", help="Run conflict analysis")
     p_run.add_argument("--apply", action="store_true", help="Apply fixes")
 
-    p_analyze = subparsers.add_parser("analyze", help="Analyze only (no fixes)")
+    subparsers.add_parser("analyze", help="Analyze only (no fixes)")
 
-    p_status = subparsers.add_parser("status", help="Show status")
+    subparsers.add_parser("status", help="Show status")
 
     p_export = subparsers.add_parser("export", help="Export report")
     p_export.add_argument("output", help="Output file path")

@@ -1,6 +1,9 @@
 import sys
 import os
 from pathlib import Path
+import argparse
+import json
+
 # Anchor the package root (src/) rather than ml_platforms/ itself: the bare
 # `from health_monitor import` that insert existed to enable was recorded by the
 # graph as an external placeholder for an in-tree module (measured 2026-11-14).
@@ -59,20 +62,17 @@ Examples:
                 python harness.py models
 """
 
-import sys
-import argparse
-import json
-from pathlib import Path
-from typing import List
 
 #: Swallows recorded when the failure ledger is unavailable (it is a stdlib-only
 #: leaf, so this fallback should never fire -- if it does, the ledger is missing).
 
 try:
     from CORE.failure_ledger import note_failure
-except ImportError:                               # never break the host
+except ImportError:  # never break the host
+
     def note_failure(where: str, exc: BaseException | None = None) -> None:
         pass  # ledger missing; evidence-vs-silence tradeoff capped here
+
 
 # Auto-add ml_platforms to path (Azazael environment)
 BASE_DIR = Path(__file__).parent.parent
@@ -85,6 +85,7 @@ __version__ = "2.0.0"
 # Dynamic path via CORE.paths
 try:
     from CORE.paths import get_src_dir
+
     __path__ = str(get_src_dir() / "ORCHESTRATION" / "ml_platforms")  # type: ignore[reportAssignmentType]
 except ImportError as exc:
     note_failure("harness:L74", exc)
@@ -297,9 +298,9 @@ def cmd_verify(args):
 
 def main():
     parser = argparse.ArgumentParser(
-    description="ML Platform Harness - Unified interface",
-    formatter_class=argparse.RawDescriptionHelpFormatter,
-    epilog="""
+        description="ML Platform Harness - Unified interface",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
 Location: C:/Users/clint/Desktop/Azazael_UNIFIED/ORCHESTRATION/ml_platforms
 
 Examples:
@@ -342,13 +343,13 @@ Examples:
     p_monitor.add_argument("-v", "--verbose", action="store_true")
 
     # status
-    p_status = subparsers.add_parser("status", help="Show system status")
+    subparsers.add_parser("status", help="Show system status")
 
     # models
-    p_models = subparsers.add_parser("models", help="list available models")
+    subparsers.add_parser("models", help="list available models")
 
     # verify
-    p_verify = subparsers.add_parser("verify", help="Run full verification")
+    subparsers.add_parser("verify", help="Run full verification")
 
     args = parser.parse_args()
 
@@ -371,5 +372,3 @@ Examples:
 
 if __name__ == "__main__":
     sys.exit(main())
-
-

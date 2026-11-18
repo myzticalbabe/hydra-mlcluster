@@ -37,16 +37,18 @@ import time
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 #: Swallows recorded when the failure ledger is unavailable (it is a stdlib-only
 #: leaf, so this fallback should never fire -- if it does, the ledger is missing).
 
 try:
     from CORE.failure_ledger import note_failure
-except ImportError:                               # never break the host
+except ImportError:  # never break the host
+
     def note_failure(where: str, exc: BaseException | None = None) -> None:
         pass  # ledger missing; evidence-vs-silence tradeoff capped here
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -55,7 +57,7 @@ logger = logging.getLogger(__name__)
 class LexiconUpdater:
     """Auto-updates BIBL lexicon when modules change."""
 
-    def __init__(self, base_path: (Path | None) = None):
+    def __init__(self, base_path: Path | None = None):
         self.base_path = base_path or Path(__file__).parent.parent
         self.bibl_path = self.base_path / "BIBL"
         self.ml_path = self.base_path / "ml_platforms"
@@ -378,9 +380,9 @@ class MLPlatformConfig:
 
     DEFAULT_PATH = Path(__file__).parent.parent / "ml_platform_config.json"
 
-    def __init__(self, path: (Path | None) = None):
+    def __init__(self, path: Path | None = None):
         self.path = path or self.DEFAULT_PATH
-        self._data: (dict | None) = None
+        self._data: dict | None = None
         self._lexicon_updater = LexiconUpdater()
         self.load()
 
@@ -393,7 +395,7 @@ class MLPlatformConfig:
             self._data = None
 
     @property
-    def data(self) -> (dict | None):
+    def data(self) -> dict | None:
         """Get loaded configuration data."""
         return self._data
 
@@ -412,7 +414,7 @@ class MLPlatformConfig:
         """Get total count of platforms."""
         return len(self.platforms)
 
-    def get_environment(self, name: str) -> (dict | None):
+    def get_environment(self, name: str) -> dict | None:
         """Get a specific environment by name."""
         if not self._data:
             return None
@@ -439,7 +441,7 @@ class MLPlatformConfig:
         return self._lexicon_updater.update_lexicon()
 
 
-_config: (MLPlatformConfig | None) = None
+_config: MLPlatformConfig | None = None
 
 
 def _get_config() -> MLPlatformConfig:
@@ -450,12 +452,12 @@ def _get_config() -> MLPlatformConfig:
     return _config
 
 
-def load_config() -> (dict | None):
+def load_config() -> dict | None:
     """Load ML platform configuration."""
     return _get_config().data
 
 
-def list_platforms(env: (str | None) = None) -> list[dict[str, Any]]:
+def list_platforms(env: str | None = None) -> list[dict[str, Any]]:
     """list platforms, optionally filtered by environment."""
     config = _get_config()
     if not config.data:
@@ -466,7 +468,7 @@ def list_platforms(env: (str | None) = None) -> list[dict[str, Any]]:
     return config.platforms
 
 
-def get_env_path(env_name: str) -> (str | None):
+def get_env_path(env_name: str) -> str | None:
     """Get Python environment path."""
     config = _get_config()
     env_data = config.get_environment(env_name)

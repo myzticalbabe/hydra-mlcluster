@@ -21,7 +21,7 @@ Usage:
 """
 
 from dataclasses import dataclass, field
-from typing import Any, List
+from typing import Any
 from enum import Enum
 import json
 
@@ -30,7 +30,8 @@ import json
 
 try:
     from CORE.failure_ledger import note_failure
-except ImportError:                               # never break the host
+except ImportError:  # never break the host
+
     def note_failure(where: str, exc: BaseException | None = None) -> None:
         pass  # ledger missing; evidence-vs-silence tradeoff capped here
 
@@ -129,7 +130,7 @@ class PIPELINES:
     )
 
     @classmethod
-    def get_pipeline(cls, name: str) -> (PipelineConfig | None):
+    def get_pipeline(cls, name: str) -> PipelineConfig | None:
         """Get a pipeline by name."""
         return getattr(cls, name.upper(), None)
 
