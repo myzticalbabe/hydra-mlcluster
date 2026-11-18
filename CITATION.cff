@@ -1,23 +1,32 @@
 cff-version: 1.2.0
-message: "If you use this software, cite it as below. If you cite a measured figure, cite the commit and the split it came from."
-title: "Project_HYDRA_MLCluster: Adaptive ML cluster, ML platform management, MetaCluster v2 flat dispatch, parallel execution, work-stealing, thread safety."
-version: "0.1.0"
-date-released: "2026-11-14"
-license: "CDDL-1.1"
-type: software
-abstract: >-
-  Adaptive ML cluster, ML platform management, MetaCluster v2 flat dispatch, parallel execution, work-stealing, thread safety.
+message: "If you use this software, please cite it as below."
 authors:
-  - name: "Azazael Contributors"
+  - family-names: "Azazael"
+    given-names: "Contributors"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "Hydra ML Cluster: Adaptive ML Cluster System"
+version: 0.1.0
+doi: "10.5281/zenodo.XXXXXXX"
+date-released: 2026-11-18
+url: "https://github.com/myzticalbabe/hydra-mlcluster"
+preferred-citation:
+  type: "software"
+  authors:
+    - family-names: "Azazael"
+      given-names: "Contributors"
+  title: "Hydra ML Cluster: Adaptive ML Cluster System"
+  year: 2026
+  version: "0.1.0"
+  doi: "10.5281/zenodo.XXXXXXX"
+  url: "https://github.com/myzticalbabe/hydra-mlcluster"
 keywords:
-  - ml-cluster
-  - meta-cluster
-  - adaptive
-  - distributed
-  - work-stealing
-  - hydra
-references:
-  - type: software
-    title: "Azazael Core"
-    notes: "Parent framework providing core infrastructure."
-    url: "https://github.com/myzticalbabe/azazael"
+  - "ml"
+  - "cluster"
+  - "adaptive"
+  - "training"
+  - "inference"
+  - "monitoring"
+license: "CDDL-1.1"
+repository: "https://github.com/myzticalbabe/hydra-mlcluster"
+repository-code: "https://github.com/myzticalbabe/hydra-mlcluster"
+repository-artifact: "https://pypi.org/project/hydra-mlcluster/"
