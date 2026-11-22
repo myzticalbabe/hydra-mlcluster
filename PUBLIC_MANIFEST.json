@@ -1,9 +1,9 @@
 {
   "project": "hydra-mlcluster",
   "version": "0.1.0",
-  "description": "Hydra ML Cluster — Adaptive ML Cluster System extracted from AZAZAEL",
+  "description": "Hydra ML Cluster \u2014 Adaptive ML Cluster System extracted from AZAZAEL",
   "repository": "https://github.com/myzticalbabe/hydra-mlcluster",
-  "license": "CDDL-1.1",
+  "license": "LicenseRef-SoulForge-1.0",
   "authors": [
     {
       "name": "Azazael Contributors",
